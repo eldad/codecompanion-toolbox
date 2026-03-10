@@ -21,9 +21,9 @@ M.cargo_clippy = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo clippy " .. extra
+      return "cargo clippy " .. extra .. " 2>&1"
     end
-    return "cargo clippy"
+    return "cargo clippy 2>&1"
   end,
 })
 
@@ -45,9 +45,9 @@ M.cargo_clippy_fix = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo clippy --fix " .. extra
+      return "cargo clippy --fix " .. extra .. " 2>&1"
     end
-    return "cargo clippy --fix"
+    return "cargo clippy --fix 2>&1"
   end,
 })
 
@@ -66,9 +66,9 @@ M.cargo_fmt = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo fmt " .. extra
+      return "cargo fmt " .. extra .. " 2>&1"
     end
-    return "cargo fmt"
+    return "cargo fmt 2>&1"
   end,
 })
 
@@ -90,9 +90,9 @@ M.cargo_build = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo build " .. extra
+      return "cargo build " .. extra .. " 2>&1"
     end
-    return "cargo build"
+    return "cargo build 2>&1"
   end,
 })
 
@@ -114,9 +114,9 @@ M.cargo_build_release = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo build --release " .. extra
+      return "cargo build --release " .. extra .. " 2>&1"
     end
-    return "cargo build --release"
+    return "cargo build --release 2>&1"
   end,
 })
 
@@ -138,9 +138,9 @@ M.cargo_update = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo update " .. extra
+      return "cargo update " .. extra .. " 2>&1"
     end
-    return "cargo update"
+    return "cargo update 2>&1"
   end,
 })
 
@@ -167,9 +167,9 @@ M.cargo_add = cmd_tool({
     local crate = vim.trim(args.crate or "")
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return string.format("cargo add %s %s", crate, extra)
+      return string.format("cargo add %s %s 2>&1", crate, extra)
     end
-    return "cargo add " .. crate
+    return "cargo add " .. crate .. " 2>&1"
   end,
 })
 
@@ -203,7 +203,7 @@ M.cargo_test = cmd_tool({
     if extra ~= "" then
       cmd = cmd .. " " .. extra
     end
-    return cmd
+    return cmd .. " 2>&1"
   end,
 })
 
@@ -225,9 +225,9 @@ M.cargo_run = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo run " .. extra
+      return "cargo run " .. extra .. " 2>&1"
     end
-    return "cargo run"
+    return "cargo run 2>&1"
   end,
 })
 
@@ -250,9 +250,9 @@ M.cargo_check = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo check " .. extra
+      return "cargo check " .. extra .. " 2>&1"
     end
-    return "cargo check"
+    return "cargo check 2>&1"
   end,
 })
 
@@ -275,9 +275,9 @@ M.cargo_doc = cmd_tool({
   build_cmd = function(args)
     local extra = vim.trim(args.args or "")
     if extra ~= "" then
-      return "cargo doc " .. extra
+      return "cargo doc " .. extra .. " 2>&1"
     end
-    return "cargo doc"
+    return "cargo doc 2>&1"
   end,
 })
 
