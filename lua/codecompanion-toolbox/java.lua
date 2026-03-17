@@ -1,6 +1,6 @@
 ---@module "codecompanion.interactions.chat.tools.builtin.cmd_tool"
 local cmd_tool = require("codecompanion.interactions.chat.tools.builtin.cmd_tool")
-local build_cmd = require("codecompanion-toolbox").build_cmd
+local build_cmd = require("codecompanion-toolbox.utils").build_cmd
 
 local M = {}
 
