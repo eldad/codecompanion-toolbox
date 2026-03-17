@@ -1,5 +1,6 @@
 ---@module "codecompanion.interactions.chat.tools.builtin.cmd_tool"
 local cmd_tool = require("codecompanion.interactions.chat.tools.builtin.cmd_tool")
+local build_cmd = require("codecompanion-toolbox").build_cmd
 
 local M = {}
 
@@ -38,23 +39,18 @@ M.git_inspect = cmd_tool({
 
     local sub = vim.trim(args.subcommand or "")
     if not allowed[sub] then
-      -- Fall back safely
       return "git status"
     end
 
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return string.format("git %s %s", sub, extra)
-    end
-    return "git " .. sub
+    return build_cmd("git " .. sub, { args.args })
   end,
 })
 
 M.git_commit = cmd_tool({
   name = "git_commit",
   description = table.concat({
-    "Create a git commit. By default commits all staged changes.",
-    "The LLM must supply a commit message. Optionally pass extra flags such as '--amend' or '-a'.",
+    "Create a git commit.",
+    "The LLM must supply a commit message and list of files to commit. Optionally pass extra flags such as '--amend'. flags should normally not be used.",
   }, " "),
   schema = {
     properties = {
@@ -62,20 +58,21 @@ M.git_commit = cmd_tool({
         type = "string",
         description = "The commit message.",
       },
+      files = {
+        type = "string",
+        description = "list of files to commit.",
+      },
       flags = {
         type = "string",
-        description = "Optional extra flags (e.g. '--amend', '-a'). Empty string if none.",
+        description = "optional extra flags. empty string if none.",
       },
     },
     required = { "message", "flags" },
   },
   build_cmd = function(args)
     local msg = args.message or "auto-commit"
-    local flags = vim.trim(args.flags or "")
-    if flags ~= "" then
-      return string.format("git commit %s -m %s", flags, vim.fn.shellescape(msg))
-    end
-    return string.format("git commit -m %s", vim.fn.shellescape(msg))
+    local parts = { args.files, args.flags, "-m " .. vim.fn.shellescape(msg) }
+    return build_cmd("git commit", parts)
   end,
 })
 
@@ -105,17 +102,16 @@ M.git_branch = cmd_tool({
   },
   build_cmd = function(args)
     local action = args.action or "create"
-    local name = args.name or ""
+    local name = vim.trim(args.name or "")
     local flags = vim.trim(args.flags or "")
 
     if action == "create" then
-      return string.format("git branch %s %s", flags, name)
+      return build_cmd("git branch", { flags, name })
     elseif action == "delete" then
       local flag = (flags ~= "") and flags or "-d"
-      return string.format("git branch %s %s", flag, name)
+      return build_cmd("git branch", { flag, name })
     elseif action == "rename" then
-      -- flags should contain the old branch name when renaming
-      return string.format("git branch -m %s %s", flags, name)
+      return build_cmd("git branch -m", { flags, name })
     end
     return "git branch"
   end,
@@ -141,12 +137,7 @@ M.git_checkout = cmd_tool({
     required = { "target", "flags" },
   },
   build_cmd = function(args)
-    local target = args.target or ""
-    local flags = vim.trim(args.flags or "")
-    if flags ~= "" then
-      return string.format("git checkout %s %s", flags, target)
-    end
-    return "git checkout " .. target
+    return build_cmd("git checkout", { args.flags, args.target })
   end,
 })
 
@@ -163,11 +154,7 @@ M.git_pull = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "git pull " .. extra
-    end
-    return "git pull"
+    return build_cmd("git pull", { args.args })
   end,
 })
 
@@ -187,11 +174,7 @@ M.git_push = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "git push " .. extra
-    end
-    return "git push"
+    return build_cmd("git push", { args.args })
   end,
 })
 

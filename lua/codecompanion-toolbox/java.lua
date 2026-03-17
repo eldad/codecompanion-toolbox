@@ -1,5 +1,6 @@
 ---@module "codecompanion.interactions.chat.tools.builtin.cmd_tool"
 local cmd_tool = require("codecompanion.interactions.chat.tools.builtin.cmd_tool")
+local build_cmd = require("codecompanion-toolbox").build_cmd
 
 local M = {}
 
@@ -19,11 +20,7 @@ M.gradle_build = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew build " .. extra
-    end
-    return "./gradlew build"
+    return build_cmd("./gradlew build", { args.args })
   end,
 })
 
@@ -43,11 +40,7 @@ M.gradle_build_no_check = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew build -x check " .. extra
-    end
-    return "./gradlew build -x check"
+    return build_cmd("./gradlew build -x check", { args.args })
   end,
 })
 
@@ -73,15 +66,8 @@ M.gradle_test = cmd_tool({
   },
   build_cmd = function(args)
     local filter = vim.trim(args.test_filter or "")
-    local extra = vim.trim(args.args or "")
-    local cmd = "./gradlew test"
-    if filter ~= "" then
-      cmd = cmd .. " --tests " .. vim.fn.shellescape(filter)
-    end
-    if extra ~= "" then
-      cmd = cmd .. " " .. extra
-    end
-    return cmd
+    local flag = (filter ~= "") and ("--tests " .. vim.fn.shellescape(filter)) or ""
+    return build_cmd("./gradlew test", { flag, args.args })
   end,
 })
 
@@ -101,11 +87,7 @@ M.gradle_spotless_apply = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew spotlessApply " .. extra
-    end
-    return "./gradlew spotlessApply"
+    return build_cmd("./gradlew spotlessApply", { args.args })
   end,
 })
 
@@ -126,11 +108,7 @@ M.gradle_dependencies = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew dependencies " .. extra
-    end
-    return "./gradlew dependencies"
+    return build_cmd("./gradlew dependencies", { args.args })
   end,
 })
 
@@ -150,11 +128,7 @@ M.gradle_clean = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew clean " .. extra
-    end
-    return "./gradlew clean"
+    return build_cmd("./gradlew clean", { args.args })
   end,
 })
 
@@ -175,11 +149,7 @@ M.gradle_spotless_check = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "./gradlew spotlessCheck " .. extra
-    end
-    return "./gradlew spotlessCheck"
+    return build_cmd("./gradlew spotlessCheck", { args.args })
   end,
 })
 
@@ -205,12 +175,7 @@ M.gradle_run_task = cmd_tool({
   },
   build_cmd = function(args)
     local task = vim.trim(args.task or "")
-    local extra = vim.trim(args.args or "")
-    local cmd = "./gradlew " .. task
-    if extra ~= "" then
-      cmd = cmd .. " " .. extra
-    end
-    return cmd
+    return build_cmd("./gradlew " .. task, { args.args })
   end,
 })
 

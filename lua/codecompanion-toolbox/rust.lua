@@ -1,5 +1,6 @@
 ---@module "codecompanion.interactions.chat.tools.builtin.cmd_tool"
 local cmd_tool = require("codecompanion.interactions.chat.tools.builtin.cmd_tool")
+local build_cmd = require("codecompanion-toolbox").build_cmd
 
 local M = {}
 
@@ -19,11 +20,7 @@ M.cargo_clippy = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo clippy " .. extra .. " 2>&1"
-    end
-    return "cargo clippy 2>&1"
+    return build_cmd("cargo clippy", { args.args, "2>&1" })
   end,
 })
 
@@ -43,11 +40,7 @@ M.cargo_clippy_fix = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo clippy --fix " .. extra .. " 2>&1"
-    end
-    return "cargo clippy --fix 2>&1"
+    return build_cmd("cargo clippy --fix", { args.args, "2>&1" })
   end,
 })
 
@@ -64,11 +57,7 @@ M.cargo_fmt = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo fmt " .. extra .. " 2>&1"
-    end
-    return "cargo fmt 2>&1"
+    return build_cmd("cargo fmt", { args.args, "2>&1" })
   end,
 })
 
@@ -88,11 +77,7 @@ M.cargo_build = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo build " .. extra .. " 2>&1"
-    end
-    return "cargo build 2>&1"
+    return build_cmd("cargo build", { args.args, "2>&1" })
   end,
 })
 
@@ -112,11 +97,7 @@ M.cargo_build_release = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo build --release " .. extra .. " 2>&1"
-    end
-    return "cargo build --release 2>&1"
+    return build_cmd("cargo build --release", { args.args, "2>&1" })
   end,
 })
 
@@ -136,11 +117,7 @@ M.cargo_update = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo update " .. extra .. " 2>&1"
-    end
-    return "cargo update 2>&1"
+    return build_cmd("cargo update", { args.args, "2>&1" })
   end,
 })
 
@@ -165,11 +142,7 @@ M.cargo_add = cmd_tool({
   },
   build_cmd = function(args)
     local crate = vim.trim(args.crate or "")
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return string.format("cargo add %s %s 2>&1", crate, extra)
-    end
-    return "cargo add " .. crate .. " 2>&1"
+    return build_cmd("cargo add", { crate, args.args, "2>&1" })
   end,
 })
 
@@ -195,15 +168,7 @@ M.cargo_test = cmd_tool({
   },
   build_cmd = function(args)
     local filter = vim.trim(args.filter or "")
-    local extra = vim.trim(args.args or "")
-    local cmd = "cargo test"
-    if filter ~= "" then
-      cmd = cmd .. " " .. filter
-    end
-    if extra ~= "" then
-      cmd = cmd .. " " .. extra
-    end
-    return cmd .. " 2>&1"
+    return build_cmd("cargo test", { filter, args.args, "2>&1" })
   end,
 })
 
@@ -223,11 +188,7 @@ M.cargo_run = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo run " .. extra .. " 2>&1"
-    end
-    return "cargo run 2>&1"
+    return build_cmd("cargo run", { args.args, "2>&1" })
   end,
 })
 
@@ -248,11 +209,7 @@ M.cargo_check = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo check " .. extra .. " 2>&1"
-    end
-    return "cargo check 2>&1"
+    return build_cmd("cargo check", { args.args, "2>&1" })
   end,
 })
 
@@ -273,11 +230,7 @@ M.cargo_doc = cmd_tool({
     required = { "args" },
   },
   build_cmd = function(args)
-    local extra = vim.trim(args.args or "")
-    if extra ~= "" then
-      return "cargo doc " .. extra .. " 2>&1"
-    end
-    return "cargo doc 2>&1"
+    return build_cmd("cargo doc", { args.args, "2>&1" })
   end,
 })
 

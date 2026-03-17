@@ -5,6 +5,23 @@
 
 local M = {}
 
+--- Build a shell command from a base string and a list of optional parts.
+--- Only non-empty parts are included; parts are joined with a single space.
+---
+---@param base string The fixed beginning of the command (e.g. "git commit").
+---@param parts string[] Optional extra tokens to append (empty strings are skipped).
+---@return string
+function M.build_cmd(base, parts)
+  local tokens = { base }
+  for _, part in ipairs(parts) do
+    local p = vim.trim(part or "")
+    if p ~= "" then
+      table.insert(tokens, p)
+    end
+  end
+  return table.concat(tokens, " ")
+end
+
 local git = require("codecompanion-toolbox.git")
 local rust = require("codecompanion-toolbox.rust")
 local java = require("codecompanion-toolbox.java")
